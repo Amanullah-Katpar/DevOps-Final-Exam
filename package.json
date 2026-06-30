@@ -2,8 +2,10 @@
   "name": "phoenix-app",
   "version": "1.0.0",
  "scripts": {
-  "test": "jest --passWithNoTests"
-},
+    "start": "node index.js",
+    "build": "vite build",
+    "test": "jest --passWithNoTests"
+  },
   "dependencies": {
     "express": "^4.19.2",
     "mongoose": "^8.3.2"
