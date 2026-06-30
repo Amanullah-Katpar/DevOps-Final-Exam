@@ -16,14 +16,17 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm install --omit=dev
+# Copy only what's needed to run the server (keeps image small, <200MB)
+COPY --chown=node:node package*.json ./
+RUN npm install --omit=dev && npm cache clean --force
 
-COPY --from=builder /app/dist ./dist
-COPY index.js ./
+COPY --chown=node:node --from=builder /app/dist ./dist
+COPY --chown=node:node index.js ./
 
-RUN mkdir -p /app/logs && chown -R node:node /app
+# Create the logs folder and hand ownership to the built-in non-root "node" user
+RUN mkdir -p /app/logs && chown -R node:node /app/logs
 
+# Mission 3: drop root privileges, run as the restricted "node" user
 USER node
 
 EXPOSE 5000
